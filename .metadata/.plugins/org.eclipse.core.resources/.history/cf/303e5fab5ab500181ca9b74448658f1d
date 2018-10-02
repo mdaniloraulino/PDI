@@ -1,0 +1,235 @@
+package util;
+
+import javafx.scene.image.Image;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
+import javafx.scene.paint.Color;
+
+public class Pdi {
+	
+	
+	
+	
+	public static Image escalaDeCinza(Image img,int r, int g,int b) {
+		try {
+			int w = (int) img.getWidth();
+			int h = (int) img.getHeight();
+			double m;
+			boolean pond = false;
+			PixelReader pr = img.getPixelReader();
+			WritableImage wi = new WritableImage(w, h);
+			PixelWriter pw = wi.getPixelWriter();
+			pond = !(r == 0 && g == 0 && b == 0);
+			for (int i = 0; i < w; i++) {
+				for (int j = 0; j < h; j++) {
+					Color ca = pr.getColor(i, j);
+					if(pond) {
+						//System.out.println(" "+(rgb[0] / 100)+" "+(rgb[1] / 100)+" "+(rgb[2] / 100));
+						m = ((ca.getRed() * (r / 100.0))) + (ca.getGreen() * (g / 100.0)) + (ca.getBlue() * (b / 100.0) ) / 100 ;
+					} else {
+						m = (ca.getRed() + ca.getGreen() + ca.getBlue()) / 3;	
+					}
+					pw.setColor(i, j, new Color(m,m,m,ca.getOpacity()));
+				}
+			}
+			return wi;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static Image negativar(Image img) {
+		try {
+			int w = (int) img.getWidth();
+			int h = (int) img.getHeight();
+			double m;
+			PixelReader pr = img.getPixelReader();
+			WritableImage wi = new WritableImage(w, h);
+			PixelWriter pw = wi.getPixelWriter();
+			for (int i = 0; i < w; i++) {
+				for (int j = 0; j < h; j++) {
+					Color ca = pr.getColor(i, j);
+					pw.setColor(i, j, new Color((1 - ca.getRed()),
+							(1 - ca.getGreen()),
+							(1 - ca.getBlue()),
+							ca.getOpacity()));						
+				}
+			}
+			return wi;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static Image limiarizacao(Image img,double limiar) {
+		try {
+			int w = (int) img.getWidth();
+			int h = (int) img.getHeight();
+			double m;
+			PixelReader pr = img.getPixelReader();
+			WritableImage wi = new WritableImage(w, h);
+			PixelWriter pw = wi.getPixelWriter();
+			for (int i = 0; i < w; i++) {
+				for (int j = 0; j < h; j++) {
+					Color ca = pr.getColor(i, j);
+					if (ca.getRed() >= limiar) {
+						pw.setColor(i, j, new Color(1,1,1,ca.getOpacity()));	
+					} else {
+						pw.setColor(i, j, new Color(0,0,0,ca.getOpacity()));
+					}
+					
+				}
+			}
+			return wi;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static Image removeRuido(Image img,int type) {
+		try {
+			int w = (int) img.getWidth();
+			int h = (int) img.getHeight();
+			PixelReader pr = img.getPixelReader();
+			WritableImage wi = new WritableImage(w, h);
+			PixelWriter pw = wi.getPixelWriter();
+			for (int i = 1; i < w - 1; i++) {
+				for (int j = 1; j < h - 1; j++) {
+					Pixel px = retornaPixel(pr, i, j);
+					Color ca = pr.getColor(i, j);
+					double mR = px.RetornaMediana(type, 0);
+					double mG = px.RetornaMediana(type, 1);
+					double mB = px.RetornaMediana(type, 2);
+					pw.setColor(i, j, new Color(mR,mG,mB,ca.getOpacity()));
+				}
+			}
+			return wi;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;	
+	}
+	
+	public static Pixel retornaPixel(PixelReader pr, int x, int y) {
+		Pixel px = new Pixel();
+		px.setCor(pr.getColor(x, y));
+		Pixel[] vizinhos = new Pixel[8];
+		int k = 0;
+		for (int i = -1; i <= 1; i++) {
+			for (int j = -1; j <= 1; j++) {
+				if(k == 8) {
+					break;
+				}
+				if(i == 0 && y == 0) {
+					vizinhos[k] = px;
+					k++;
+				}
+				Pixel aux = new Pixel();
+				aux.setCor(pr.getColor(x+i, y+j));
+				aux.setX(x+i);
+				aux.setY(x+j);
+				vizinhos[k] = aux;
+				k++;
+			}
+		}
+		px.setVizinhos(vizinhos);
+		
+		return px;
+	}
+	
+	private static int[] returnSize(Image img1 , Image img2) {
+		return new int[] {
+				(int) (img1.getHeight() < img2.getHeight() ? img1.getHeight() : img2.getHeight()),
+				(int) (img1.getWidth() < img2.getWidth() ? img1.getWidth() : img2.getWidth())
+		};
+	}
+	
+	public static Image adicaoImage(Image img1, Image img2,double pct, double pct2 ) {
+		try {
+			int[] size = returnSize(img1,img2);
+			int w = size[1];
+			int h = size[0];
+			PixelReader pr = img1.getPixelReader();
+			PixelReader pr2 = img2.getPixelReader();
+			WritableImage wi = new WritableImage(w, h);
+			PixelWriter pw = wi.getPixelWriter();
+			for (int i = 0; i < w; i++) {
+				for (int j = 0; j < h; j++) {
+					Color c = pr.getColor(i, j);
+					Color c2 = pr2.getColor(i, j);
+					pw.setColor(i,j,new Color((c.getRed() * pct) + (c2.getRed() * pct2),
+							(c.getGreen() * pct) + (c2.getGreen() * pct2),
+							(c.getBlue() * pct) + (c2.getBlue() * pct2),c.getOpacity()));
+				}
+			}
+			return wi;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static Image subtractImage(Image img1, Image img2) {
+		try {
+			int[] size = returnSize(img1,img2);
+			int w = size[1];
+			int h = size[0];
+			PixelReader pr = img1.getPixelReader();
+			PixelReader pr2 = img2.getPixelReader();
+			WritableImage wi = new WritableImage(w, h);
+			PixelWriter pw = wi.getPixelWriter();
+			for (int i = 0; i < w; i++) {
+				for (int j = 0; j < h; j++) {
+					Color c = pr.getColor(i, j);
+					Color c2 = pr2.getColor(i, j);
+					double r = c.getRed() - c2.getRed();
+					double g = c.getGreen() - c2.getGreen();
+					double b = c.getBlue() - c2.getBlue();
+					pw.setColor(i,j,new Color( r < 0 ? 0 : r , 
+								g < 0 ? 0 : g,
+								b < 0 ? 0 : b,
+								c.getOpacity())
+					);
+				}
+			}
+			return wi;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static Image criaBorda(Image img, int sX,int sY,int eX,int eY) {
+		try {
+			int w = (int) img.getWidth();
+			int h = (int) img.getHeight();
+			PixelReader pr = img.getPixelReader();
+			WritableImage wi =  new WritableImage(w, h);
+			PixelWriter pw = wi.getPixelWriter();
+			int j = 0;
+			for (int i = sX; i < eX ; i++) {
+				Color c = pr.getColor(i, i);
+				pw.setColor(i,sY, new Color(0,0,0,c.getOpacity()));
+				pw.setColor(eX-j,eY, new Color(0,0,0,c.getOpacity()));
+				j++;
+			}
+			j = 0;
+			for (int i = sY; i < eY ; i++) {
+				Color c = pr.getColor(i, i);
+				pw.setColor(sX,i, new Color(0,0,0,c.getOpacity()));
+				pw.setColor(eX,eY-j, new Color(0,0,0,c.getOpacity()));
+				j++;
+			}
+			
+			return wi;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;	
+	}
+
+}

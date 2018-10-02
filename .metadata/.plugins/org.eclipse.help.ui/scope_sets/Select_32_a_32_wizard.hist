@@ -1,0 +1,6 @@
+#Fri Aug 31 19:18:31 BRT 2018
+__DEFAULT__=false
+org.eclipse.sdk.Eclipse.master=true
+org.eclipse.sdk.Google.master=true
+org.eclipse.help.ui.localSearch.master=true
+expression=Select a wizard
