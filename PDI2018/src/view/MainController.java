@@ -28,6 +28,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import util.Pdi;
 import util.Pixel;
+import util.Segmentacao;
 
 public class MainController {
 	
@@ -54,6 +55,9 @@ public class MainController {
 	//Adição/Subtração
 	@FXML TextField pImg1;
 	@FXML TextField pImg2;
+	
+	//Segmentação
+	@FXML TextField quantidadeSegment;
 	
 	private File f;
 	private Image img1;
@@ -262,6 +266,13 @@ public class MainController {
 				e.printStackTrace();
 			}
 	}
+	
+	@FXML
+	public void SegmentarImagem() {
+		img3 = Segmentacao.segmentar(img1, Integer.parseInt(quantidadeSegment.getText()));
+		atualizaImage();
+	}
+	
 	@FXML
 	public void equaliza() {
 		img3 = Pdi.Equalizar(img1,true);

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
+import javafx.scene.image.PixelReader;
 import javafx.scene.paint.Color;
 
 public class Pixel {
@@ -19,10 +20,45 @@ public class Pixel {
 	private int x ,y;
 	private Pixel[] vizinhos = new Pixel[8];
 	
+	public Pixel() {
+		
+	}
+	
+	public Pixel(PixelReader pr, int x , int y) {
+		
+		this.setCor(pr.getColor(x, y));
+		Pixel[] vizinhos = new Pixel[8];
+		int k = 0;
+		for (int i = -1; i <= 1; i++) {
+			for (int j = -1; j <= 1; j++) {
+				if (k == 8) {
+					break;
+				}
+				if (i == 0 && y == 0) {
+					vizinhos[k] = this;
+					k++;
+				}
+				Pixel aux = new Pixel();
+				if(false) {
+					aux.setCor(pr.getColor(x + i, y + j));
+					aux.setX(x + i);
+					aux.setY(x + j);
+					vizinhos[k] = aux;
+				}
+				k++;
+			}
+		}
+		this.setVizinhos(vizinhos);
+
+	}
+	
 	public Color getCor() {
 		return cor;
 	}
 	public void setCor(Color cor) {
+		this.r = cor.getRed();
+		this.g = cor.getGreen();
+		this.b = cor.getBlue();
 		this.cor = cor;
 	}
 	public double getR() {
