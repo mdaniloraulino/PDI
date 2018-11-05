@@ -167,7 +167,7 @@
                                           <ToggleGroup fx:id="viz" />
                                        </toggleGroup>
                                     </RadioButton>
-                                    <RadioButton fx:id="rPlus" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="222.0" text="Em +" toggleGroup="$viz">
+                                    <RadioButton fx:id="rPlus" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="222.0" selected="true" text="Em +" toggleGroup="$viz">
                                        <VBox.margin>
                                           <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                        </VBox.margin>
@@ -265,6 +265,81 @@
                                        </VBox.margin>
                                     </Button>
                                     <Button layoutX="20.0" layoutY="143.0" mnemonicParsing="false" onAction="#subImage" prefHeight="31.0" prefWidth="192.0" text="aplicar borda" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </TitledPane>
+                  <TitledPane animated="false" layoutX="10.0" layoutY="160.0" text="Moldura">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <VBox layoutX="19.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="38.40000000000009" AnchorPane.leftAnchor="19.0" AnchorPane.rightAnchor="19.399999999999977" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <RadioButton fx:id="rMoldura" mnemonicParsing="false" prefHeight="21.0" prefWidth="222.0" text="Vermelho">
+                                       <toggleGroup>
+                                          <ToggleGroup fx:id="moldura" />
+                                       </toggleGroup>
+                                    </RadioButton>
+                                    <RadioButton fx:id="gMoldura" mnemonicParsing="false" prefHeight="21.0" prefWidth="222.0" selected="true" text="Verde" toggleGroup="$moldura" />
+                                    <RadioButton fx:id="bMoldura" mnemonicParsing="false" prefHeight="21.0" prefWidth="222.0" text="Azul" toggleGroup="$moldura" />
+                                    <Label text="Largura" />
+                                    <TextField fx:id="larguraMoldura" />
+                                    <Button layoutX="20.0" layoutY="143.0" mnemonicParsing="false" onAction="#Moldura" prefHeight="31.0" prefWidth="237.0" text="AplicaMoldura" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </TitledPane>
+                  <TitledPane animated="false" layoutX="10.0" layoutY="185.0" text="Horizontal">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <VBox layoutX="19.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="38.40000000000009" AnchorPane.leftAnchor="19.0" AnchorPane.rightAnchor="19.399999999999977" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <Button layoutX="20.0" layoutY="143.0" mnemonicParsing="false" onAction="#dividir" prefHeight="31.0" prefWidth="237.0" text="Dividir Horizontal" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </TitledPane>
+                  <TitledPane animated="false" layoutX="10.0" layoutY="210.0" text="Identifica Forma">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <VBox layoutX="19.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="38.40000000000009" AnchorPane.leftAnchor="19.0" AnchorPane.rightAnchor="19.399999999999977" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <Button layoutX="20.0" layoutY="143.0" mnemonicParsing="false" onAction="#identificaQuadrado" prefHeight="31.0" prefWidth="237.0" text="Identificar" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </TitledPane>
+                  <TitledPane animated="false" layoutX="10.0" layoutY="235.0" text="Face Detection">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <VBox layoutX="19.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="38.40000000000009" AnchorPane.leftAnchor="19.0" AnchorPane.rightAnchor="19.399999999999977" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <Button layoutX="20.0" layoutY="143.0" mnemonicParsing="false" onAction="#faceDetection" prefHeight="31.0" prefWidth="237.0" text="Identificar" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </TitledPane>
+                  <TitledPane animated="false" layoutX="10.0" layoutY="260.0" text="Erosão / Dilatação">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <VBox layoutX="19.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="38.40000000000009" AnchorPane.leftAnchor="19.0" AnchorPane.rightAnchor="19.399999999999977" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <Button fx:id="btnDilatar" layoutX="20.0" layoutY="143.0" mnemonicParsing="false" onAction="#dialtarImg" prefHeight="31.0" prefWidth="237.0" text="Dilatar" />
+                                    <Button fx:id="btnErodir" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#erodirImg" prefHeight="31.0" prefWidth="237.0" text="Erodir" />
                                  </children>
                               </VBox>
                            </children>

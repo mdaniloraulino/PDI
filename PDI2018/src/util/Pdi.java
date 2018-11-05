@@ -404,5 +404,116 @@ public class Pdi {
 			return null;
 		}
 	}
-
+	
+	public static Image criarMoldura(Image img,int largura,int Cor) {
+		try {
+			int w = (int) img.getWidth() ;
+			int h = (int) img.getHeight();
+			Color cLargura = null;
+			int xI = 0,yI = 0;
+			boolean printMolduraX = false;
+			boolean printMolduraY = false;
+			PixelReader pr = img.getPixelReader();
+			WritableImage wi = new WritableImage(w , h);
+			PixelWriter pw = wi.getPixelWriter();
+			for (int i = 0; i < w ; i++) {
+				for (int j = 0; j < h ; j++) {
+					Color ca = pr.getColor(i, j);
+					switch(Cor){
+					case Constantes.R:
+						cLargura = new Color(1,0,0,1);
+						break;
+					case Constantes.G:
+						cLargura = new Color(0,1,0,1);
+						break;
+					case Constantes.B:
+						cLargura = new Color(0,0,1,1);
+						break;
+					}
+					if(i < largura | i > w - largura) {
+						pw.setColor(i, j, cLargura);
+					} else if (j < largura | j > h - largura) {
+						pw.setColor(i, j, cLargura);
+					} else {
+						pw.setColor(i, j, pr.getColor(i, j));
+					}
+					
+					
+				}
+			}
+			return wi;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
+		return null;
+	}
+	
+	public static Image divideHorizontal(Image img) {
+		try {
+			int w = (int) img.getWidth() ;
+			int h = (int) img.getHeight();
+			Color cLargura = null;
+			int xI = 0,yI = 0;
+			boolean nextEffect = false;
+		
+			PixelReader pr = img.getPixelReader();
+			WritableImage wi = new WritableImage(w, h);
+			PixelWriter pw = wi.getPixelWriter();
+			for (int j = 0; j < h ; j++) {
+				nextEffect = ((j == (h / 2)))  | nextEffect;
+				for (int i = 0; i < w ; i++) {		
+					Color ca = pr.getColor(i, j);
+					if(!nextEffect) {
+						ca = negativaPixel(ca);
+					} else {
+						ca = blackNwhite(ca);
+					}
+					pw.setColor(i, j, ca);
+				}
+			}
+			return wi;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
+		return null;
+	}
+	
+	private static Color negativaPixel(Color c) {
+		return new Color(1 - c.getRed(),1 - c.getGreen(),1 - c.getGreen(),c.getOpacity());
+	}
+	
+	private static Color blackNwhite(Color c) {
+		double m = (c.getRed() + c.getGreen() + c.getBlue()) / 3;
+		return new Color(m,m,m,c.getOpacity());
+	}
+	
+	
+	public static int verificaForma(Image img) {
+		try {
+			int w = (int) img.getWidth() ;
+			int h = (int) img.getHeight();
+			PixelReader pr = img.getPixelReader();
+			WritableImage wi = new WritableImage(w, h);
+			PixelWriter pw = wi.getPixelWriter();
+			for (int j = 0; j < h ; j++) {
+				for (int i = 0; i < w ; i++) {		
+					Color ca = pr.getColor(i, j);
+					if(ca.getRed() == 0 && ca.getGreen() == 0 && ca.getRed() == 0) {
+						Color aux = pr.getColor(i, j+1	);
+						if(aux.getRed() == 0 && aux.getGreen() == 0 && aux.getRed() == 0) {
+							return Constantes.QUADRADO;
+						} else {
+							return Constantes.CIRCULO;
+						}
+						
+					} 
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
+		return -1;
+	}
+	
+	
 }

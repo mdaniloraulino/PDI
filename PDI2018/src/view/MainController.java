@@ -1,9 +1,7 @@
 package view;
 
-import java.awt.TrayIcon.MessageType;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
@@ -26,6 +24,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import openCV.OpenCVUtis;
+import util.Constantes;
 import util.Pdi;
 import util.Pixel;
 import util.Segmentacao;
@@ -51,6 +51,11 @@ public class MainController {
 	@FXML RadioButton rCross;
 	@FXML RadioButton rPlus;
 	@FXML RadioButton rMax;
+	//Cor Moldura
+	@FXML RadioButton rMoldura;
+	@FXML RadioButton gMoldura;
+	@FXML RadioButton bMoldura;
+	@FXML TextField larguraMoldura;
 	
 	//Adição/Subtração
 	@FXML TextField pImg1;
@@ -245,7 +250,7 @@ public class MainController {
 				  Parent root = loader.load();
 				  stage.setScene(new Scene(root));
 				  stage.setTitle("Histograma");
-				  //stage.initModality(Modality.WINDOW_MODAL);
+				 
 				  stage.initOwner(((Node)event.getSource()).
 						  getScene().getWindow() 
 				  );
@@ -280,6 +285,59 @@ public class MainController {
 	}
 	public void equalizaValids() {
 		img3 = Pdi.Equalizar(img1,true);
+		atualizaImage();
+	}
+	
+	@FXML
+	public void dividir() {
+		img3 = Pdi.divideHorizontal(img1);
+		atualizaImage();
+	}
+	@FXML
+	public void Moldura() {
+		int cor = 0;
+		
+		if(rMoldura.isSelected()) {
+			cor = Constantes.R;
+		}
+		if(gMoldura.isSelected()) {
+			cor = Constantes.G;
+		}
+		if(bMoldura.isSelected()) {
+			cor = Constantes.B;
+		}
+		
+		img3 = Pdi.criarMoldura(img1, Integer.parseInt(larguraMoldura.getText()), cor);
+		atualizaImage();
+	}
+	@FXML
+	public void identificaQuadrado() {
+		switch(Pdi.verificaForma(img1)) {
+		case Constantes.QUADRADO:
+			showMsg("É Quadrado ou ciruclo?", "Resposta", "QUADRADO", AlertType.INFORMATION);
+			break;
+		case Constantes.CIRCULO:
+			showMsg("É Quadrado ou ciruclo?", "Resposta", "CIRCULO", AlertType.INFORMATION);
+			break;
+		case -1:
+			showMsg("É Quadrado ou ciruclo?", "Resposta", "NENHUM DOS DOIS", AlertType.INFORMATION);
+			break;
+		}
+	}
+	@FXML
+	public void erodirImg() {
+		img3 = OpenCVUtis.erosaoDilatacao(img1, true);
+		atualizaImage();
+	}
+	
+	@FXML
+	public void dialtarImg() {
+		img3 = OpenCVUtis.erosaoDilatacao(img1, false);
+		atualizaImage();
+	}
+	
+	public void faceDetection() {
+		img3 = OpenCVUtis.faceDetection(img1);
 		atualizaImage();
 	}
 }
