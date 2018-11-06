@@ -98,13 +98,67 @@ public class OpenCVUtis {
 		return matToImg(returnImg);
 	}
 	
+	
+	
+	public static Image aplicaSobel(Image img1) {	
+		try {
+			System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+	        Mat grad = new Mat();
+			Mat image,imageGray = new Mat();
+			int scale = 1;
+		    int delta = 0;
+		    int ddepth = CvType.CV_16S;
+			image = imgToMat(img1);
+	
+			Imgproc.cvtColor(image,imageGray,Imgproc.COLOR_RGB2GRAY);
+			
+			Mat grad_x = new Mat(), grad_y = new Mat();
+	        Mat abs_grad_x = new Mat(), abs_grad_y = new Mat();
+			
+			Imgproc.Sobel(imageGray, grad_x, ddepth, 1, 0, 3, scale, delta, Core.BORDER_DEFAULT );
+			Imgproc.Sobel(imageGray, grad_y, ddepth, 0, 1, 3, scale, delta, Core.BORDER_DEFAULT );
+	
+			Core.convertScaleAbs( grad_x, abs_grad_x );
+	        Core.convertScaleAbs( grad_y, abs_grad_y );
+	        Core.addWeighted( abs_grad_x, 0.5, abs_grad_y, 0.5, 0, grad );
+			
+			return matToImg(grad);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	
 	public static Image canny(Image img, int tr) {
 		
+
+		try {
+			System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+			Mat image = new Mat();
+			Mat imageGray = new Mat();
+			Mat detectedEdges = new Mat();
+			image = imgToMat(img);
+	
+			Imgproc.cvtColor(image,imageGray,Imgproc.COLOR_RGB2GRAY);
+			Imgproc.blur(imageGray, detectedEdges, new Size(3, 3));
+			Imgproc.Canny(detectedEdges, detectedEdges, tr, tr * 3, 3, false);
+			
+			return matToImg(detectedEdges);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+		
+		/*	
 		Imgproc.blur(src, srcBlur, BLUR_SIZE);
         Imgproc.Canny(srcBlur, detectedEdges, lowThresh, lowThresh * RATIO, KERNEL_SIZE, false);
         dst = new Mat(src.size(), CvType.CV_8UC3, Scalar.all(0));
-        src.copyTo(dst, detectedEdges);
+        src.copyTo(dst, detectedEdges);*/
 		
+	}
+	public static Image prewitt() {
+		return null;
 	}
 
 }

@@ -72,6 +72,8 @@ public class MainController {
 	
 	
 	@FXML Slider sliderLimia;
+	@FXML Slider sliderCanny;
+	
 	@FXML
 	public void abreImagem() {
 		f = selecionaImagem();
@@ -338,6 +340,16 @@ public class MainController {
 	
 	public void faceDetection() {
 		img3 = OpenCVUtis.faceDetection(img1);
+		atualizaImage();
+	}
+	
+	public void doCanny() {
+		img3 = OpenCVUtis.canny(img1, (int)sliderCanny.getValue());
+		atualizaImage();
+	}
+	
+	public void doSobel() {
+		img3 = OpenCVUtis.aplicaSobel(img1);
 		atualizaImage();
 	}
 }
