@@ -157,8 +157,35 @@ public class OpenCVUtis {
         src.copyTo(dst, detectedEdges);*/
 		
 	}
-	public static Image prewitt() {
-		return null;
+	public static Image prewitt(Image img) {
+		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+
+		Mat image = new Mat();
+		image = imgToMat(img);
+		Mat imageGray = new Mat();
+		Mat detectedEdges = new Mat();
+		Mat imgPx = new Mat();
+		Mat imgPy = new Mat();
+		Imgproc.cvtColor(image,imageGray,Imgproc.COLOR_RGB2GRAY);
+		Imgproc.GaussianBlur(imageGray, detectedEdges, new Size(3, 3),0);
+		int[][] pX = new int[][] {new int[] {1,1,1},new int[] {0,0,0},new int[] {-1,-1,-1}};
+		int[][] pY = new int[][] {new int[] {-1,0,1},new int[] {-1,0,1},new int[] {-1,0,1}};
+		Imgproc.filter2D(detectedEdges, imgPx,-1, array2Mat(pX));
+		Imgproc.filter2D(detectedEdges, imgPy,-1, array2Mat(pY));
+		Core.add(imgPx, imgPy, detectedEdges);;
+		
+		return matToImg(detectedEdges);
+	}
+	
+	public static Mat array2Mat(int[][] array) {
+		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+		//int[][] intArray = new int[][]{{2,3,4},{5,6,7},{8,9,10}};
+		Mat matObject = new Mat(3,3,CvType.CV_8UC1);
+		for(int row=0;row<3;row++){
+		   for(int col=0;col<3;col++)
+		        matObject.put(row, col, array[row][col]);
+		}
+		return matObject;
 	}
 
 }

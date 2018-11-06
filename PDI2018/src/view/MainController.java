@@ -352,4 +352,9 @@ public class MainController {
 		img3 = OpenCVUtis.aplicaSobel(img1);
 		atualizaImage();
 	}
+	
+	public void doPrewitt() {
+		img3 = OpenCVUtis.prewitt(img1);
+		atualizaImage();
+	}
 }
